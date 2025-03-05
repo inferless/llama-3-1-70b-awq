@@ -1,3 +1,6 @@
+import os
+os.environ["HF_HUB_ENABLE_HF_TRANSFER"]='1'
+from huggingface_hub import snapshot_download
 import torch
 from awq import AutoAWQForCausalLM
 from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -5,6 +8,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 class InferlessPythonModel:
     def initialize(self):
         model_id = "hugging-quants/Meta-Llama-3.1-70B-Instruct-AWQ-INT4"
+        snapshot_download(repo_id=model_id,allow_patterns=["*.safetensors"])
         self.tokenizer = AutoTokenizer.from_pretrained(model_id)
         self.model = AutoAWQForCausalLM.from_pretrained(
               model_id,
